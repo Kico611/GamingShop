@@ -1,0 +1,30 @@
+.contact-info{
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    margin-left: 100px;
+    margin-top: 70px;
+}
+.contact-us{
+    padding-bottom: 10px;
+    font-size: 50px;
+}
+.contact-desc{
+    font-size: 20px;
+    padding-bottom: 20px;
+}
+.contact-ape{
+    font-weight: 500;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.contact{
+    display: flex;
+    flex-direction: row;
+}
+.map{
+    width:600px; 
+    height:"450";
+    border-style: none;
+    margin-left: 200px;
+    margin-top:20px;
+}

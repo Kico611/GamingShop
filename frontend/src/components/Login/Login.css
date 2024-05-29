@@ -1,0 +1,60 @@
+.log-reg{
+    display: flex;
+    flex-direction: row;
+    min-height: 500px;
+}
+.prijava{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #1c1f24;
+    width: 50%;
+    border-left-style: solid;
+    border-left-color: black;
+    border-width: 1px;
+}
+.registracija{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #1c1f24;
+    width: 50%; 
+    border-right-style: solid;
+    border-right-color: black;
+    border-width: 1px;
+}
+.text1{
+    margin-top: 8%;
+    color: white;
+    font-size: 25px;
+}
+.text2{
+    margin-top:8%;
+    color: white;
+    font-size:25px
+}
+.input{
+    width: 340px;
+    height:40px;
+    border-radius: 25px;
+}
+.text{
+    margin-bottom: 5px;
+    color: white;
+    font-size: 16px;
+    margin-top: 20px;
+}
+.btnAcc{
+    margin-top: 30px;
+    width: 270px;
+    height: 3rem;
+    border-radius: 15px;
+    color:white;
+    background-color: red;
+}
+.message {
+    color: red;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+}

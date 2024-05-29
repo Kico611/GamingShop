@@ -1,0 +1,48 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.navbar{
+    background-color:#1c1f24;
+    height: 70px;
+}
+.container{
+    display:flex;
+    flex-direction: row;
+    justify-content:flex-end;
+    align-items:center;
+    height: 70px;
+}
+.logo{
+    margin-right: auto;
+    zoom: 150%;
+}
+.login{
+  background-color: #1c1f24;
+  border: 2px solid;
+  border-color: #ffffff;
+  border-radius: 50px;
+  height: 50px;
+  width: 200px;
+  color: #ffffff;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  margin-right:8px;
+}
+.login:hover{
+    background-color: #c40000;
+}
+.search-button{
+    background-color: #c40000;
+    width: 80px;
+    height: 70px;
+    border: 0px;
+}
+.cart-logo{
+    margin-right: 15px;
+}
+.user{
+    margin-right: 8px;
+}

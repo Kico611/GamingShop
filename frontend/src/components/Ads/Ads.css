@@ -1,0 +1,16 @@
+.ads{
+    display: flex;
+    align-items: flex-start;
+}
+.ad1{
+    width: 50%;
+    max-height:350px ;
+    border: 0;
+    vertical-align: bottom;
+}
+.ad2{
+    width: 50%;
+    max-height: 350px;
+    border: 0;
+    vertical-align: bottom;
+}

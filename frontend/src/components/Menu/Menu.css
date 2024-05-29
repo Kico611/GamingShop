@@ -1,0 +1,51 @@
+.menu {
+  margin: 0;
+  font: bold 17px/1.4 'Open Sans', arial, sans-serif;
+  background: #1c1f24;
+}
+.menu ul { 
+  margin: 0 auto; 
+  padding: 3px; 
+  list-style: none; 
+  display: table;
+  width: 600px;
+  text-align: center;
+}
+.menu li { 
+  display: table-cell; 
+  position: relative; 
+  text-decoration: none;
+  padding: 15px 0;
+}
+.menu a {
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none; /* Remove the default underline */
+  letter-spacing: 0.15em;
+  
+  display: inline-block;
+  padding: 0 20px;
+  margin-bottom: 0;
+  position: relative;
+}
+.menu a:after {    
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: #fff;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+}
+.menu a:hover:after { 
+  width: 100%; 
+  left: 0; 
+}
+@media screen and (max-height: 300px) {
+  .menu ul {
+    margin-top: 40px;
+  }
+}
