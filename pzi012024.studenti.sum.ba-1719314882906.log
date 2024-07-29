@@ -1,0 +1,40 @@
+gamingshop.studenti.sum.ba/dohvati:1 
+        
+        
+       Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+Product.js:18 Greška prilikom dohvaćanja podataka: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+(anonimno) @ Product.js:18
+pzi012024.studenti.sum.ba/:1 Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
+/login:1 [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) <input class=​"input" type=​"password" name=​"password" value=​"Balic12345!">​
+/login:1 [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) <input class=​"input" type=​"password" name=​"confirmPassword" value=​"Balic12345!">​
+/login:1 [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) <input class=​"input" type=​"password" name=​"password" value>​
+/login:1 Access to fetch at 'http://gamingshop.studenti.sum.ba/register' from origin 'http://pzi012024.studenti.sum.ba' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: It does not have HTTP ok status.
+gamingshop.studenti.sum.ba/register:1 
+        
+        
+       Failed to load resource: net::ERR_FAILED
+Login.js:51 Error: TypeError: Failed to fetch
+    at onClick (Login.js:38:36)
+    at Object.Oe (react-dom.production.min.js:54:317)
+    at Be (react-dom.production.min.js:54:471)
+    at react-dom.production.min.js:55:35
+    at Dr (react-dom.production.min.js:105:68)
+    at Ir (react-dom.production.min.js:106:380)
+    at react-dom.production.min.js:117:104
+    at cs (react-dom.production.min.js:274:42)
+    at Re (react-dom.production.min.js:52:375)
+    at Hr (react-dom.production.min.js:109:469)
+overrideMethod @ console.js:273
+onClick @ Login.js:51
+Prikaži još 1 okvir
+Prikaži manje
+gamingshop.studenti.sum.ba/dohvati:1 
+        
+        
+       Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+console.js:273 Greška prilikom dohvaćanja podataka: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+overrideMethod @ console.js:273
+Prikaži još 1 okvir
+Prikaži manje

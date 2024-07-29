@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../Login/Login.css';
+import { useUser } from '../../UserContext'; // Import useUser
 
 function Login({ setLoggedIn }) {
     const [registerData, setRegisterData] = useState({ username: '', password: '', confirmPassword: '' });
     const [loginData, setLoginData] = useState({ username: '', password: '' });
+    const navigate = useNavigate();
+    const { setUser } = useUser(); // Access setUser from context
 
     const handleRegisterChange = (e) => {
         const { name, value } = e.target;
@@ -22,7 +26,6 @@ function Login({ setLoggedIn }) {
         return password.length >= minLength && hasNumber.test(password) && hasSpecialChar.test(password);
     };
 
-
     const handleRegister = async () => {
         if (registerData.password !== registerData.confirmPassword) {
             alert('Passwords do not match!');
@@ -35,7 +38,7 @@ function Login({ setLoggedIn }) {
         }
 
         try {
-            const response = await fetch('http://localhost:9000/register', {
+            const response = await fetch('http://gamingshop.studenti.sum.ba/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: registerData.username, password: registerData.password })
@@ -55,17 +58,40 @@ function Login({ setLoggedIn }) {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:9000/login', {
+            const response = await fetch('http://gamingshop.studenti.sum.ba/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginData)
             });
 
             if (response.ok) {
+                const data = await response.json();
+                console.log('Login response data:', data); // Debugging line
+
+                const { role } = data;
+
+                if (!role) {
+                    console.error('Role is undefined:', data); // Debugging line
+                    alert('Login failed. Role is undefined.');
+                    return;
+                }
+
                 alert('Login successful!');
-                setLoggedIn(true); // Set the logged-in state to true
-                setLoginData({ username: '', password: '' }); // Clear login fields
+                setLoggedIn(true);
+                setLoginData({ username: '', password: '' });
+
+                // Set user role in context
+                setUser({ username: loginData.username, role });
+
+                // Redirect based on role
+                if (role === 'admin' || role === 'superadmin') {
+                    navigate('/admin/products');
+                } else {
+                    navigate('/');
+                }
             } else {
+                const errorData = await response.json();
+                console.error('Login failed response:', errorData); // Debugging line
                 alert('Login failed.');
             }
         } catch (error) {
@@ -99,6 +125,3 @@ function Login({ setLoggedIn }) {
 }
 
 export default Login;
-
-
-
