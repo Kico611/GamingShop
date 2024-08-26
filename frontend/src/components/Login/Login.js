@@ -38,7 +38,7 @@ function Login({ setLoggedIn }) {
         }
 
         try {
-            const response = await fetch('http://gamingshop.studenti.sum.ba/register', {
+            const response = await fetch('/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: registerData.username, password: registerData.password })
@@ -58,7 +58,7 @@ function Login({ setLoggedIn }) {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://gamingshop.studenti.sum.ba/login', {
+            const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginData)
@@ -66,32 +66,30 @@ function Login({ setLoggedIn }) {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Login response data:', data); // Debugging line
-
-                const { role } = data;
+                const { username, role } = data;
 
                 if (!role) {
-                    console.error('Role is undefined:', data); // Debugging line
-                    alert('Login failed. Role is undefined.');
+                    alert('Login failed. No role assigned.');
                     return;
                 }
+
+                // Set user context with the role and admin status
+                const isAdmin = role === 'admin' || role === 'superadmin';
+                setUser({ loggedIn: true, username, role, isAdmin });
 
                 alert('Login successful!');
                 setLoggedIn(true);
                 setLoginData({ username: '', password: '' });
 
-                // Set user role in context
-                setUser({ username: loginData.username, role });
-
                 // Redirect based on role
-                if (role === 'admin' || role === 'superadmin') {
+                if (isAdmin) {
                     navigate('/admin/products');
                 } else {
                     navigate('/');
                 }
             } else {
                 const errorData = await response.json();
-                console.error('Login failed response:', errorData); // Debugging line
+                console.error('Login failed response:', errorData);
                 alert('Login failed.');
             }
         } catch (error) {
@@ -125,3 +123,4 @@ function Login({ setLoggedIn }) {
 }
 
 export default Login;
+

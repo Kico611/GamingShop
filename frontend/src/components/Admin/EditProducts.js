@@ -21,7 +21,7 @@ const EditProduct = ({ handleClose, refreshData, productId }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://gamingshop.studenti.sum.ba/getProduct/${productId}`);
+        const response = await fetch(`/getProduct/${productId}`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setProductName(data.Name);
@@ -64,7 +64,7 @@ const EditProduct = ({ handleClose, refreshData, productId }) => {
     }
 
     try {
-      const response = await fetch(`http://gamingshop.studenti.sum.ba/updateProduct/${productId}`, {
+      const response = await fetch(`/updateProduct/${productId}`, {
         method: 'PUT',
         body: formData,
       });

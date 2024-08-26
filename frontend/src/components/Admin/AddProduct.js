@@ -36,7 +36,7 @@ const AddProduct = ({ handleClose, refreshData }) => {
     formData.append('Image', image || null);
 
     try {
-      const response = await fetch('http://gamingshop.studenti.sum.ba/addProduct', { // Ensure this URL is correct
+      const response = await fetch('/addProduct', { // Ensure this URL is correct
         method: 'POST',
         body: formData,
       });

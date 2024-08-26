@@ -14,6 +14,7 @@ import Users from './components/Admin/Users';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { CartProvider } from './CartContext';
 import { UserProvider } from './UserContext'; // Import UserProvider
+import ProtectedRoute from './ProtectedRoutes';
 
 function App() {
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -27,7 +28,7 @@ function App() {
 
     return (
         <CartProvider>
-            <UserProvider> {/* Wrap with UserProvider */}
+            <UserProvider>
                 {!isAdminRoute && <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
                 {!isAdminRoute && <Menu onCategoryChange={handleCategoryChange} />}
                 <Routes>
@@ -38,9 +39,10 @@ function App() {
                     <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/cart" element={<Cart />} />
-                    <Route path="/admin" element={<Admin />} />
-                    <Route path="/admin/products" element={<Products />} />
-                    <Route path="/admin/users" element={<Users />} />
+                    {/* Protect admin routes */}
+                    <Route path="/admin" element={<ProtectedRoute element={<Admin />} adminOnly />} />
+                    <Route path="/admin/products" element={<ProtectedRoute element={<Products />} adminOnly />} />
+                    <Route path="/admin/users" element={<ProtectedRoute element={<Users />} adminOnly />} />
                 </Routes>
                 {!isAdminRoute && <Footer />}
             </UserProvider>

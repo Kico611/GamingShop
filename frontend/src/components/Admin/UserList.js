@@ -70,7 +70,7 @@ export default function UserList() {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://gamingshop.studenti.sum.ba/korisnici'); // Adjust URL as needed
+      const response = await fetch('/korisnici'); // Adjust URL as needed
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       console.log('Fetched data:', data); // Log data to check structure
@@ -111,7 +111,7 @@ export default function UserList() {
 
     if (confirmed.isConfirmed) {
       try {
-        const response = await fetch(`http://gamingshop.studenti.sum.ba/deleteUser/${id}`, {
+        const response = await fetch(`/deleteUser/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {

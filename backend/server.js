@@ -6,6 +6,8 @@ const multer = require('multer');
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // Number of salt roun
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -14,10 +16,10 @@ const upload = multer({
 // MySQL connection
 const mysql = require('mysql');
 const db = mysql.createConnection({
-    host: '212.39.115.110',
+    host: 'localhost',
     user: 'root',
-    password: 'csdigital2023',
-    database: 'gamingshop'
+    password: '',
+    database: 'pzi012024'
 });
 
 db.connect(function (error) {
@@ -29,39 +31,64 @@ db.connect(function (error) {
 });
 
 // Register endpoint
-app.post('http://gamingshop.studenti.sum.ba/register', (req, res) => {
-    const { username, password } = req.body;
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
 
-    db.query('INSERT INTO user (Username, Password) VALUES (?, ?)', [username, password], (error, results) => {
-        if (error) {
-            console.error('Error inserting user:', error);
-            return res.status(500).json({ error: 'Database error' });
-        }
-        res.status(200).json({ message: 'User registered successfully' });
-    });
+  console.log('Received registration request:', { username, password });
+
+  try {
+      // Hash the password
+      console.log('Hashing password...');
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      console.log('Password hashed:', hashedPassword);
+
+      // Store the hashed password in the database
+      console.log('Inserting user into the database...');
+      db.query('INSERT INTO user (Username, Password) VALUES (?, ?)', [username, hashedPassword], (error, results) => {
+          if (error) {
+              console.error('Error inserting user:', error);
+              return res.status(500).json({ error: 'Database error' });
+          }
+          console.log('User inserted successfully:', results);
+          res.status(200).json({ message: 'User registered successfully' });
+      });
+  } catch (error) {
+      console.error('Error hashing password:', error);
+      res.status(500).json({ error: 'Server error' });
+  }
 });
 
-// Login endpoint
-app.post('http://gamingshop.studenti.sum.ba/login', (req, res) => {
-    const { username, password } = req.body;
 
-    db.query('SELECT Username, role FROM user WHERE Username = ? AND Password = ?', [username, password], (error, results) => {
-        if (error) {
-            console.error('Error querying user:', error);
-            return res.status(500).json({ error: 'Database error' });
-        }
-        
-        if (results.length > 0) {
-            const user = results[0];
-            res.status(200).json({ message: 'Login successful', username: user.Username, role: user.role });
-        } else {
-            res.status(401).json({ message: 'Login failed' });
-        }
-    });
+// Login endpoint
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  db.query('SELECT Username, Password, role FROM user WHERE Username = ?', [username], async (error, results) => {
+      if (error) {
+          console.error('Error querying user:', error);
+          return res.status(500).json({ error: 'Database error' });
+      }
+
+      if (results.length > 0) {
+          const user = results[0];
+
+
+          // Compare the provided password with the hashed password in the database
+          const match = await bcrypt.compare(password, user.Password);
+
+          if (match) {
+              res.status(200).json({ message: 'Login successful', username: user.Username, role: user.role });
+          } else {
+              res.status(401).json({ message: 'Login failed' });
+          }
+      } else {
+          res.status(401).json({ message: 'Login failed' });
+      }
+  });
 });
 
 //Fetching products endpoint
-app.get('http://gamingshop.studenti.sum.ba/dohvati', (req, res) => {
+app.get('/dohvati', (req, res) => {
     db.query("SELECT * FROM product", (err, result, fields) => {
       if (err) {
         console.error('Error fetching data from the database:', err);
@@ -81,7 +108,7 @@ app.get('http://gamingshop.studenti.sum.ba/dohvati', (req, res) => {
   }); 
   
 
-  app.get('http://gamingshop.studenti.sum.ba/korisnici', (req, res) => {
+  app.get('/korisnici', (req, res) => {
     db.query('SELECT * FROM user', (err, result) => {
       if (err) {
         console.error('Error fetching data from the database:', err);
@@ -91,7 +118,7 @@ app.get('http://gamingshop.studenti.sum.ba/dohvati', (req, res) => {
     });
   });
 
-  app.delete('http://gamingshop.studenti.sum.ba/deleteUser/:id', (req, res) => {
+  app.delete('/deleteUser/:id', (req, res) => {
     const userId = req.params.id;
     const query = 'DELETE FROM user WHERE UserID = ?';
   
@@ -103,7 +130,7 @@ app.get('http://gamingshop.studenti.sum.ba/dohvati', (req, res) => {
     });
   });
 
-  app.delete('http://gamingshop.studenti.sum.ba/deleteProduct/:id', (req, res) => {
+  app.delete('/deleteProduct/:id', (req, res) => {
     const productId = req.params.id;
     const query = 'DELETE FROM product WHERE ProductID = ?';
   
@@ -115,19 +142,34 @@ app.get('http://gamingshop.studenti.sum.ba/dohvati', (req, res) => {
     });
   });
 
-  app.post('http://gamingshop.studenti.sum.ba/createUser', async (req, res) => {
+  app.post('/createUser', async (req, res) => {
     const { Username, Password, Role } = req.body;
-    const sql = 'INSERT INTO user (Username, Password, role) VALUES (?, ?, ?)'; 
-    try {
-      const result = await db.query(sql, [Username, Password, Role]);
-      res.status(201).json({ UserID: result.insertId, Username, Role });
-    } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
 
-  app.post('http://gamingshop.studenti.sum.ba/addProduct', upload.single('Image'), (req, res) => {
+    console.log('Received createUser request:', { Username, Password, Role });
+
+    try {
+        // Hash the password
+        console.log('Hashing password...');
+        const hashedPassword = await bcrypt.hash(Password, saltRounds);
+        console.log('Password hashed:', hashedPassword);
+
+        // Insert user into the database
+        const sql = 'INSERT INTO user (Username, Password, role) VALUES (?, ?, ?)';
+        db.query(sql, [Username, hashedPassword, Role], (error, results) => {
+            if (error) {
+                console.error('Error creating user:', error);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            console.log('User created successfully:', results);
+            res.status(201).json({ UserID: results.insertId, Username, Role });
+        });
+    } catch (error) {
+        console.error('Error hashing password:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+  app.post('/addProduct', upload.single('Image'), (req, res) => {
     const { ProductName, CategoryID, Brand, Description, Price, Color, StockQuantity } = req.body;
     const image = req.file ? req.file.buffer : null; // Get image buffer
   
@@ -145,7 +187,7 @@ app.get('http://gamingshop.studenti.sum.ba/dohvati', (req, res) => {
     });
   });
 
-  app.get('http://gamingshop.studenti.sum.ba/getUser/:id', (req, res) => {
+  app.get('/getUser/:id', (req, res) => {
     const userId = req.params.id;
     const query = 'SELECT username, password, role FROM user WHERE UserID = ?';
     db.query(query, [userId], (err, result) => {
@@ -161,37 +203,52 @@ app.get('http://gamingshop.studenti.sum.ba/dohvati', (req, res) => {
     });
   });
 
- 
-app.put('http://gamingshop.studenti.sum.ba/updateUser/:id', (req, res) => {
-  const userId = req.params.id;
-  const { Username, Password, Role } = req.body;
+  app.put('/updateUser/:id', async (req, res) => {
+    const userId = req.params.id;
+    const { Username, Password, Role } = req.body;
 
-  let query = 'UPDATE user SET Username = ?, role = ?';
-  const params = [Username, Role];
+    console.log('Received updateUser request:', { userId, Username, Password, Role });
 
-  if (Password) {
-      query += ', Password = ?';
-      params.push(Password);
-  }
+    let query = 'UPDATE user SET Username = ?, role = ?';
+    const params = [Username, Role];
 
-  query += ' WHERE UserID = ?';
-  params.push(userId);
+    if (Password) {
+        try {
+            // Hash the new password
+            console.log('Hashing new password...');
+            const hashedPassword = await bcrypt.hash(Password, saltRounds);
+            console.log('New password hashed:', hashedPassword);
 
-  db.query(query, params, (error, results) => {
-      if (error) {
-          console.error('Error updating user:', error);
-          return res.status(500).json({ message: 'Failed to update user' });
-      }
+            // Add hashed password to query
+            query += ', Password = ?';
+            params.push(hashedPassword);
+        } catch (error) {
+            console.error('Error hashing new password:', error);
+            return res.status(500).json({ message: 'Failed to hash password' });
+        }
+    }
 
-      if (results.affectedRows === 0) {
-          return res.status(404).json({ message: 'User not found' });
-      }
+    query += ' WHERE UserID = ?';
+    params.push(userId);
 
-      res.status(200).json({ message: 'User updated successfully' });
-  });
+    // Update user in the database
+    db.query(query, params, (error, results) => {
+        if (error) {
+            console.error('Error updating user:', error);
+            return res.status(500).json({ message: 'Failed to update user' });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        console.log('User updated successfully:', results);
+        res.status(200).json({ message: 'User updated successfully' });
+    });
 });
 
-app.get('http://gamingshop.studenti.sum.ba/getProduct/:id', (req, res) => {
+
+app.get('/getProduct/:id', (req, res) => {
   const productId = req.params.id;
   const query = 'SELECT * FROM product WHERE ProductID = ?';
   db.query(query, [productId], (err, result) => {
@@ -211,7 +268,7 @@ app.get('http://gamingshop.studenti.sum.ba/getProduct/:id', (req, res) => {
   });
 });
 
-app.put('http://gamingshop.studenti.sum.ba/updateProduct/:id', upload.single('Image'), async (req, res) => {
+app.put('/updateProduct/:id', upload.single('Image'), async (req, res) => {
   const productId = req.params.id;
   const { ProductName, CategoryID, Brand, Description, Price, Color, StockQuantity } = req.body;
   const newImage = req.file ? req.file.buffer : null;
@@ -249,7 +306,7 @@ app.put('http://gamingshop.studenti.sum.ba/updateProduct/:id', upload.single('Im
   }
 });
 
-const PORT = 9009;
+const PORT = 9000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

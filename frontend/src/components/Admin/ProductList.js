@@ -85,7 +85,7 @@ export default function ProductList() {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://gamingshop.studenti.sum.ba/dohvati'); // Adjust URL as needed
+      const response = await fetch('/dohvati'); // Adjust URL as needed
       const data = await response.json();
       console.log('Fetched data:', data); // Log data to check structure
       setRows(data);
@@ -125,7 +125,7 @@ export default function ProductList() {
 
     if (confirmed.isConfirmed) {
       try {
-        const response = await fetch(`http://gamingshop.studenti.sum.ba/deleteProduct/${id}`, {
+        const response = await fetch(`/deleteProduct/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
