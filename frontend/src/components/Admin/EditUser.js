@@ -16,7 +16,7 @@ const EditUser = ({ handleClose, refreshData, userId }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`/getUser/${userId}`);
+        const response = await fetch(`http://gamingshop.studenti.sum.ba/getUser/${userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user');
         }
@@ -51,7 +51,7 @@ const EditUser = ({ handleClose, refreshData, userId }) => {
     };
 
     try {
-      const response = await fetch(`/updateUser/${userId}`, {
+      const response = await fetch(`http://gamingshop.studenti.sum.ba/updateUser/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

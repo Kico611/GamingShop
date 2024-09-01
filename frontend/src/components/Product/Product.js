@@ -11,7 +11,7 @@ function Product({ selectedCategory, selectedBrands, selectedColors, minPrice, m
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/dohvati');
+                const response = await fetch('http://gamingshop.studenti.sum.ba/dohvati');
                 const data = await response.json();
                 setBackendData(data);
             } catch (error) {
